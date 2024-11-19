@@ -13,7 +13,7 @@ import openai
 import streamlit as st
 
 # Set OpenAI API Key
-openai.api_key = "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"
+
 
 # Function to scrape scholarship data
 def scrape_scholarship_data(urls):

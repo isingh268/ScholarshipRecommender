@@ -28,7 +28,7 @@ def main():
         Let's make your scholarship search easier and more effective!
         """
     )
-    st.sidebar.image("https://via.placeholder.com/150", caption="Scholarship Finder", use_column_width=True)
+    
 
     # Section 1: Basic Information
     st.header("📝 Basic Information")

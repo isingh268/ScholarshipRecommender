@@ -1,37 +1,11 @@
 import streamlit as st
-import pandas as pd
 
-# Sample scholarship data
-scholarship_data = [
-    {
-        "Scholarship Name": "STEM Excellence Scholarship",
-        "Type": "Merit Scholarships",
-        "Award Amount": "$5,000",
-        "Eligibility": "STEM majors, GPA ≥ 3.5",
-        "Deadline": "March 15, 2024"
-    },
-    {
-        "Scholarship Name": "Diversity Leadership Grant",
-        "Type": "Need-Based Scholarships",
-        "Award Amount": "$10,000",
-        "Eligibility": "Underrepresented minorities, GPA ≥ 3.0",
-        "Deadline": "April 1, 2024"
-    },
-    {
-        "Scholarship Name": "Artistic Achievement Award",
-        "Type": "Artistic Scholarships",
-        "Award Amount": "$3,000",
-        "Eligibility": "Artistic talent, portfolio required",
-        "Deadline": "February 28, 2024"
-    }
-]
-
-# Main App
 def main():
+    # App Title
     st.title("Scholarship Finder Bot 🎓")
     st.markdown(
         """
-        Welcome to the Scholarship Finder Bot!  
+        Welcome to the Scholarship Finder Bot!
         Enter your details below, and we'll help you find scholarships that match your profile and preferences.
         """
     )
@@ -85,12 +59,7 @@ def main():
 
     # Section 5: Submit Button
     if st.button("Find Scholarships"):
-        st.success("Your preferences have been recorded. Matching scholarships are displayed below!")
-        
-        # Display sample scholarships (can be extended to filter based on user input)
-        st.header("🎓 Matching Scholarships")
-        df_scholarships = pd.DataFrame(scholarship_data)
-        st.dataframe(df_scholarships, use_container_width=True)
+        st.success("Your preferences have been recorded. Matching scholarships will be displayed here soon!")
 
 # Correctly structured __main__ block
 if __name__ == "__main__":

@@ -10,9 +10,9 @@ Original file is located at
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from streamlit_calendar import Calendar
+import calendar
 
-# Sample scholarship data for testing
+# Sample dataframe for testing
 data = {
     "Scholarship Name": [
         "Kuru Footsteps to Your Future Scholarship",
@@ -40,50 +40,61 @@ data = {
     ],
 }
 
-# Convert data to a DataFrame
+# Create DataFrame
 df = pd.DataFrame(data)
 df["Date Due"] = pd.to_datetime(df["Date Due"])
 
-# Streamlit app title
-st.title("Scholarship Calendar")
+# Function to create calendar data
+def generate_calendar_events(df):
+    events = {}
+    for _, row in df.iterrows():
+        date = row["Date Due"]
+        events[date] = f"{row['Scholarship Name']}\n{row['Summary']}"
+    return events
 
-# Sidebar for filtering scholarships by date
+# Initialize Streamlit app
+st.title("Scholarship Calendar")
 st.sidebar.header("Filter Scholarships")
+
+# Sidebar filters
 min_date = st.sidebar.date_input("Start Date", value=datetime(2024, 1, 1))
 max_date = st.sidebar.date_input("End Date", value=datetime(2025, 12, 31))
 
-# Filter DataFrame based on selected date range
+# Filter DataFrame based on date
 filtered_df = df[(df["Date Due"] >= pd.Timestamp(min_date)) & (df["Date Due"] <= pd.Timestamp(max_date))]
 
-# Display the filtered scholarships in a calendar
-st.subheader("Scholarship Calendar")
-calendar = Calendar()
+# Generate calendar events
+calendar_events = generate_calendar_events(filtered_df)
 
-# Prepare calendar events
-events = []
-for _, row in filtered_df.iterrows():
-    events.append({
-        "date": row["Date Due"].strftime("%Y-%m-%d"),  # Convert date to string format
-        "event": f"{row['Scholarship Name']}: {row['Summary']}",
-    })
+# Display the calendar
+st.subheader("Scholarship Due Dates")
+current_year, current_month = datetime.now().year, datetime.now().month
 
-# Render the calendar
-selected_date = calendar.render(events)
+# Allow users to change the displayed month
+selected_year = st.sidebar.selectbox("Select Year", range(2024, 2026), index=0)
+selected_month = st.sidebar.selectbox(
+    "Select Month",
+    list(calendar.month_name)[1:],
+    index=current_month - 1,
+)
 
-# Display additional details about selected scholarships
-st.subheader("Selected Date Details")
-if selected_date:
-    selected_date = pd.Timestamp(selected_date).strftime("%Y-%m-%d")
-    selected_scholarships = filtered_df[filtered_df["Date Due"] == selected_date]
-    if not selected_scholarships.empty:
-        st.write(selected_scholarships)
-    else:
-        st.write(f"No scholarships due on {selected_date}.")
-else:
-    st.write("Click on a date in the calendar to view details.")
+# Generate calendar for the selected month
+st.write(f"### {selected_month} {selected_year}")
+month_days = calendar.Calendar().monthdayscalendar(selected_year, list(calendar.month_name).index(selected_month))
 
-# Display filtered scholarships in a table
-st.subheader("Filtered Scholarships")
+for week in month_days:
+    week_display = []
+    for day in week:
+        if day == 0:
+            week_display.append("")
+        else:
+            date_key = datetime(selected_year, list(calendar.month_name).index(selected_month), day)
+            event = calendar_events.get(date_key, "")
+            week_display.append(f"{day}\n\n{event}" if event else day)
+    st.write(" | ".join([str(item) if item else " " for item in week_display]))
+
+# Display the filtered scholarships
+st.subheader("Scholarship Details")
 if not filtered_df.empty:
     st.write(filtered_df)
 else:
